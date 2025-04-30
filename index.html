@@ -24,24 +24,39 @@
         <main class="vcard-main">
             <div class="contact-section">
                 <div class="contact-column">
-                    <div class="contact-card">
-                        <i class="fas fa-envelope contact-icon"></i>
+                    <div class="contact-card email-card">
+                        <div class="card-header">
+                            <i class="fas fa-envelope contact-icon"></i>
+                            <h3 class="card-title">Email Addresses</h3>
+                        </div>
                         <div class="contact-details" id="emails"></div>
                     </div>
-                    <div class="contact-card">
-                        <i class="fas fa-phone contact-icon"></i>
+                    
+                    <div class="contact-card phone-card">
+                        <div class="card-header">
+                            <i class="fas fa-phone contact-icon"></i>
+                            <h3 class="card-title">Phone Numbers</h3>
+                        </div>
                         <div class="contact-details" id="phones"></div>
                     </div>
                 </div>
+
                 <div class="contact-column">
-                    <div class="contact-card">
-                        <i class="fas fa-globe contact-icon"></i>
+                    <div class="contact-card website-card">
+                        <div class="card-header">
+                            <i class="fas fa-globe contact-icon"></i>
+                            <h3 class="card-title">Website</h3>
+                        </div>
                         <div class="contact-details">
                             <a id="website" href="#" target="_blank" class="website-link">...</a>
                         </div>
                     </div>
-                    <div class="contact-card">
-                        <i class="fas fa-map-marker-alt contact-icon"></i>
+                    
+                    <div class="contact-card address-card">
+                        <div class="card-header">
+                            <i class="fas fa-map-marker-alt contact-icon"></i>
+                            <h3 class="card-title">Address</h3>
+                        </div>
                         <div class="contact-details">
                             <span id="address" class="address-text">...</span>
                         </div>
@@ -56,7 +71,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     <script>
-        // Keep the existing Firebase JavaScript code unchanged
         const firebaseConfig = {
             apiKey: "AIzaSyCXCsqN-xwQ-3_bt2dTaxbmywSW002zOW4",
             authDomain: "atlantic-fluids.firebaseapp.com",
@@ -89,48 +103,73 @@
             // Basic Info
             document.getElementById('fullname').textContent = user.fullname || 'No Name Provided';
             document.getElementById('position').textContent = user.position || 'No Position Specified';
-            document.getElementById('website').href = user.website || '#';
-            document.getElementById('website').textContent = user.website || 'No Website';
-            document.getElementById('address').textContent = user.address || 'No Address Provided';
+            
+            // Website
+            const websiteElement = document.getElementById('website');
+            websiteElement.href = user.website || '#';
+            websiteElement.textContent = user.website ? 
+                new URL(user.website).hostname.replace('www.', '') : 
+                'No Website';
 
-            // Handle emails
+            // Address
+            document.getElementById('address').innerHTML = user.address?.replace(/\n/g, '<br>') || 'No Address Provided';
+
+            // Emails
             const emailsContainer = document.getElementById('emails');
             if (user.emails?.length) {
                 emailsContainer.innerHTML = user.emails.map(email => `
                     <div class="contact-item">
-                        <a href="mailto:${email}" class="contact-link">${email}</a>
+                        <a href="mailto:${email}" class="contact-link">
+                            ${email}
+                            <i class="fas fa-external-link-alt link-icon"></i>
+                        </a>
                     </div>
                 `).join('');
             } else {
                 emailsContainer.innerHTML = '<div class="no-data">No emails available</div>';
             }
 
-            // Handle phones
+            // Phones
             const phonesContainer = document.getElementById('phones');
             if (user.phones?.length) {
                 phonesContainer.innerHTML = user.phones.map(phone => `
                     <div class="contact-item">
-                        <a href="tel:${phone}" class="contact-link">${phone}</a>
+                        <a href="tel:${phone}" class="contact-link">
+                            ${formatPhoneNumber(phone)}
+                            <i class="fas fa-phone-alt link-icon"></i>
+                        </a>
                     </div>
                 `).join('');
             } else {
                 phonesContainer.innerHTML = '<div class="no-data">No phone numbers available</div>';
             }
 
-            // Handle social links
+            // Social Links
             const socialLinks = document.getElementById('social-links');
+            socialLinks.innerHTML = '';
             if (user.social) {
-                socialLinks.innerHTML = `
-                    ${user.social.facebook ? `<a href="${user.social.facebook}" target="_blank" class="social-link"><i class="fab fa-facebook"></i></a>` : ''}
-                    ${user.social.twitter ? `<a href="${user.social.twitter}" target="_blank" class="social-link"><i class="fab fa-twitter"></i></a>` : ''}
-                    ${user.social.linkedin ? `<a href="${user.social.linkedin}" target="_blank" class="social-link"><i class="fab fa-linkedin"></i></a>` : ''}
-                `;
+                if (user.social.facebook) addSocialLink(socialLinks, 'facebook', user.social.facebook);
+                if (user.social.twitter) addSocialLink(socialLinks, 'twitter', user.social.twitter);
+                if (user.social.linkedin) addSocialLink(socialLinks, 'linkedin', user.social.linkedin);
             }
 
             // Update logo
             if (user.logo) {
                 document.getElementById('user-logo').src = user.logo;
             }
+        }
+
+        function formatPhoneNumber(phone) {
+            return phone.replace(/(\+\d{3})(\d{3})(\d{3})(\d{4})/, '$1 $2 $3 $4');
+        }
+
+        function addSocialLink(container, platform, url) {
+            const link = document.createElement('a');
+            link.href = url;
+            link.className = 'social-link';
+            link.target = '_blank';
+            link.innerHTML = `<i class="fab fa-${platform}"></i>`;
+            container.appendChild(link);
         }
 
         function showError(message) {
