@@ -34,7 +34,7 @@
         }
 
         .admin-header {
-            background: var(--primary-color);
+            background: linear-gradient(135deg, #0056a8 0%, #003f7a 100%);
             padding: 2rem;
             color: white;
             text-align: center;
@@ -125,10 +125,6 @@
         .dynamic-field-group {
             position: relative;
             margin-bottom: 0.5rem;
-        }
-
-        .dynamic-field-group:focus-within {
-            box-shadow: 0 0 0 2px rgba(0, 86, 168, 0.1);
         }
 
         .add-field-btn {
@@ -340,11 +336,11 @@
         const app = firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Field Validation Functions
+        // Validation functions
         const isValidEmail = email => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
         const isValidPhone = phone => /^\+?[\d\s()-]{7,}$/.test(phone);
 
-        // Dynamic Field Management
+        // Dynamic fields management
         function createField(type, containerId) {
             const container = document.getElementById(containerId);
             const fieldGroup = document.createElement('div');
@@ -355,13 +351,19 @@
             input.className = `${type}-input`;
             input.placeholder = type === 'email' ? 'example@atlantic.com' : '+234 123 456 7890';
             
+            // Only make first field required
+            if (container.children.length === 0) input.required = true;
+
             const removeBtn = document.createElement('button');
             removeBtn.type = 'button';
             removeBtn.className = 'remove-field-btn';
             removeBtn.innerHTML = '&times;';
             removeBtn.onclick = () => handleRemoveField(removeBtn);
 
-            input.addEventListener('blur', () => validateField(input, type));
+            input.addEventListener('input', () => {
+                validateField(input, type);
+                validateAllFields();
+            });
             
             fieldGroup.append(input, removeBtn);
             container.appendChild(fieldGroup);
@@ -372,22 +374,20 @@
             const container = button.closest('.dynamic-field-group').parentElement;
             if (container.children.length > 1) {
                 button.closest('.dynamic-field-group').remove();
+                // Make next field required if removing first
+                if (container.children[0]?.querySelector('input').required === false) {
+                    container.children[0].querySelector('input').required = true;
+                }
                 validateAllFields();
             }
         }
 
         function validateField(input, type) {
             const value = input.value.trim();
-            let isValid = false;
-            const errorColor = getComputedStyle(document.documentElement)
-                .getPropertyValue('--error-color').trim();
+            const isValid = value ? (type === 'email' ? isValidEmail(value) : isValidPhone(value)) : !input.required;
             
-            if (value) {
-                isValid = type === 'email' ? isValidEmail(value) : isValidPhone(value);
-                input.style.borderColor = isValid ? '#e2e8f0' : errorColor;
-                input.setCustomValidity(isValid ? '' : 'Invalid format');
-            }
-            
+            input.style.borderColor = isValid ? '#e2e8f0' : 'var(--error-color)';
+            input.setCustomValidity(isValid ? '' : 'Invalid format');
             return isValid;
         }
 
@@ -398,11 +398,9 @@
             const phoneValid = Array.from(document.querySelectorAll('.phone-input'))
                 .some(input => validateField(input, 'tel'));
 
-            const submitBtn = document.querySelector('button[type="submit"]');
-            submitBtn.disabled = !(emailValid && phoneValid);
+            document.querySelector('button[type="submit"]').disabled = !(emailValid && phoneValid);
         }
 
-        // Field Creation Functions
         function addEmailField() {
             createField('email', 'emailContainer');
         }
@@ -411,19 +409,7 @@
             createField('tel', 'phoneContainer');
         }
 
-        // Form Handling
-        function resetForm() {
-            document.getElementById('contactForm').reset();
-            
-            ['emailContainer', 'phoneContainer'].forEach(containerId => {
-                const container = document.getElementById(containerId);
-                while (container.children.length > 1) container.lastChild.remove();
-            });
-            
-            validateAllFields();
-        }
-
-        // Form Submission
+        // Form submission
         document.getElementById('contactForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -433,21 +419,24 @@
                 position: document.getElementById('position').value,
                 emails: Array.from(document.querySelectorAll('.email-input'))
                     .map(input => input.value.trim())
-                    .filter(isValidEmail),
+                    .filter(email => email && isValidEmail(email)),
                 phones: Array.from(document.querySelectorAll('.phone-input'))
                     .map(input => input.value.trim())
-                    .filter(isValidPhone),
+                    .filter(phone => phone && isValidPhone(phone)),
                 website: "https://atlanticfluids.com/",
                 address: `19, Jessy & Jenny Street,\nOff Peter Odili Road,\nTrans-Amadi, Port Harcourt,\nRivers State, Nigeria.`,
                 logo: "qt=q_95.jpg"
             };
 
             try {
-                if (!newContact.userId || !newContact.fullname || !newContact.position ||
-                    newContact.emails.length === 0 || newContact.phones.length === 0) {
-                    throw new Error("Please complete all required fields with valid information");
-                }
+                // Validate required fields
+                if (!newContact.userId) throw new Error("Employee ID is required");
+                if (!newContact.fullname) throw new Error("Full name is required");
+                if (!newContact.position) throw new Error("Position is required");
+                if (newContact.emails.length === 0) throw new Error("At least one valid email required");
+                if (newContact.phones.length === 0) throw new Error("At least one valid phone number required");
 
+                // Save to Firestore
                 await db.collection("contacts").doc(newContact.userId).set(newContact);
                 alert('Profile saved successfully!');
                 resetForm();
@@ -457,7 +446,25 @@
             }
         });
 
-        // Initial Validation
+        function resetForm() {
+            document.getElementById('contactForm').reset();
+            ['emailContainer', 'phoneContainer'].forEach(containerId => {
+                const container = document.getElementById(containerId);
+                while (container.children.length > 1) container.lastChild.remove();
+                // Reset required status
+                if (container.children[0]) container.children[0].querySelector('input').required = true;
+            });
+            validateAllFields();
+        }
+
+        // Initialize validation
+        document.querySelectorAll('.email-input, .phone-input').forEach(input => {
+            const type = input.classList.contains('email-input') ? 'email' : 'tel';
+            input.addEventListener('input', () => {
+                validateField(input, type);
+                validateAllFields();
+            });
+        });
         validateAllFields();
     </script>
 </body>
