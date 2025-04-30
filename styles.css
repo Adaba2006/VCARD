@@ -8,7 +8,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
 body {
@@ -28,10 +28,21 @@ body {
     max-width: 600px;
     width: 95%;
     margin: 20px auto;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
+    transition: all 0.3s ease;
 }
+
+.error {
+    color: #dc3545;
+    padding: 20px;
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid #dc3545;
+    border-radius: 8px;
+    margin: 20px;
+}
+
+/* Keep all your original styles from the previous CSS */
+/* Add this at the end of your existing CSS */
 
 .vcard-container:hover {
     transform: translateY(-5px);
@@ -232,5 +243,14 @@ body {
 
     .contact-info li {
         padding: 8px;
+    }
+}
+@media (max-width: 480px) {
+    .admin-container {
+        padding: 15px;
+    }
+    
+    .constant-field {
+        padding: 10px;
     }
 }
