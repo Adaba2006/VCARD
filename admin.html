@@ -347,11 +347,10 @@
             fieldGroup.className = 'dynamic-field-group';
             
             const input = document.createElement('input');
-            input.type = type;
+            input.type = type === 'email' ? 'email' : 'tel';
             input.className = `${type}-input`;
             input.placeholder = type === 'email' ? 'example@atlantic.com' : '+234 123 456 7890';
             
-            // Only make first field required
             if (container.children.length === 0) input.required = true;
 
             const removeBtn = document.createElement('button');
@@ -373,9 +372,11 @@
         function handleRemoveField(button) {
             const container = button.closest('.dynamic-field-group').parentElement;
             if (container.children.length > 1) {
-                button.closest('.dynamic-field-group').remove();
-                // Make next field required if removing first
-                if (container.children[0]?.querySelector('input').required === false) {
+                const removedField = button.closest('.dynamic-field-group');
+                const wasRequired = removedField.querySelector('input').required;
+                removedField.remove();
+
+                if (wasRequired && container.children.length > 0) {
                     container.children[0].querySelector('input').required = true;
                 }
                 validateAllFields();
@@ -396,7 +397,7 @@
                 .some(input => validateField(input, 'email'));
             
             const phoneValid = Array.from(document.querySelectorAll('.phone-input'))
-                .some(input => validateField(input, 'tel'));
+                .some(input => validateField(input, 'phone'));
 
             document.querySelector('button[type="submit"]').disabled = !(emailValid && phoneValid);
         }
@@ -406,7 +407,7 @@
         }
 
         function addPhoneField() {
-            createField('tel', 'phoneContainer');
+            createField('phone', 'phoneContainer');
         }
 
         // Form submission
@@ -436,7 +437,10 @@
                 if (newContact.emails.length === 0) throw new Error("At least one valid email required");
                 if (newContact.phones.length === 0) throw new Error("At least one valid phone number required");
 
-                // Save to Firestore
+                // Ensure array format
+                newContact.emails = Array.isArray(newContact.emails) ? newContact.emails : [newContact.emails];
+                newContact.phones = Array.isArray(newContact.phones) ? newContact.phones : [newContact.phones];
+
                 await db.collection("contacts").doc(newContact.userId).set(newContact);
                 alert('Profile saved successfully!');
                 resetForm();
@@ -451,15 +455,17 @@
             ['emailContainer', 'phoneContainer'].forEach(containerId => {
                 const container = document.getElementById(containerId);
                 while (container.children.length > 1) container.lastChild.remove();
-                // Reset required status
-                if (container.children[0]) container.children[0].querySelector('input').required = true;
+                if (container.children[0]) {
+                    container.children[0].querySelector('input').required = true;
+                    container.children[0].querySelector('input').value = '';
+                }
             });
             validateAllFields();
         }
 
         // Initialize validation
         document.querySelectorAll('.email-input, .phone-input').forEach(input => {
-            const type = input.classList.contains('email-input') ? 'email' : 'tel';
+            const type = input.classList.contains('email-input') ? 'email' : 'phone';
             input.addEventListener('input', () => {
                 validateField(input, type);
                 validateAllFields();
