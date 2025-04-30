@@ -2,106 +2,290 @@
 <html>
 <head>
     <title>Admin Panel - Atlantic Fluids</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
+        /* ===== Base Styles ===== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #f8fafc;
+            padding: 2rem;
+        }
+
+        /* ===== Admin Container ===== */
         .admin-container {
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 30px;
+            max-width: 800px;
+            margin: 2rem auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0,86,168,0.08);
+            overflow: hidden;
+        }
+
+        /* ===== Header Section ===== */
+        .admin-header {
+            background: #0056a8;
+            padding: 2rem;
+            color: white;
+            text-align: center;
+        }
+
+        .admin-header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .admin-header p {
+            color: #e2e8f0;
+            font-size: 0.9rem;
+        }
+
+        /* ===== Company Constants Section ===== */
+        .company-constants {
+            padding: 2rem;
+            background: #f8faff;
+            border-bottom: 3px solid #e3efff;
+        }
+
+        .constants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .constant-card {
             background: white;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            box-shadow: 0 2px 12px rgba(0,86,168,0.05);
         }
 
-        #contactForm {
+        .constant-header {
             display: flex;
-            flex-direction: column;
-            gap: 15px;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1.2rem;
         }
 
-        .constant-field {
-            background: #f0f0f0;
-            padding: 15px;
+        .constant-icon {
+            width: 40px;
+            height: 40px;
+            background: #e3efff;
             border-radius: 8px;
-            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0056a8;
+        }
+
+        .constant-title {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 0.95rem;
+        }
+
+        .constant-value {
+            color: #4a5568;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* ===== Form Section ===== */
+        .form-section {
+            padding: 2rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
         }
 
         label {
+            display: block;
+            color: #2d3748;
             font-weight: 500;
-            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
         }
 
         input, textarea {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #0056a8;
+            box-shadow: 0 0 0 3px rgba(0,86,168,0.1);
+        }
+
+        /* ===== Social Media Section ===== */
+        .social-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        /* ===== Submit Button ===== */
+        .submit-section {
+            padding: 2rem;
+            background: #f8faff;
+            border-top: 1px solid #e2e8f0;
         }
 
         button {
             background: #0056a8;
             color: white;
-            padding: 12px;
+            padding: 1rem 2rem;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 16px;
-            transition: background 0.3s;
+            width: 100%;
+            transition: all 0.2s ease;
         }
 
         button:hover {
             background: #003f7a;
+            transform: translateY(-1px);
         }
     </style>
 </head>
 <body>
     <div class="admin-container">
-        <h1>Add New Contact</h1>
-        <form id="contactForm">
-            <div class="constant-field">
-                <h3>Company Constants</h3>
-                <label>Address:</label>
-                <textarea id="constantAddress" readonly>19, Jessy & Jenny Street, Off Peter Odili Road, Trans-Amadi, Port Harcourt, Rivers State, Nigeria.</textarea>
-                
-                <label>Website:</label>
-                <input type="url" id="constantWebsite" readonly value="https://atlanticfluids.com/">
-                
-                <label>Logo URL:</label>
-                <input type="url" id="constantLogo" readonly value="qt=q_95.jpg">
+        <!-- Header -->
+        <div class="admin-header">
+            <h1>Atlantic Fluids CRM</h1>
+            <p>Employee Profile Management System</p>
+        </div>
+
+        <!-- Company Information Section -->
+        <div class="company-constants">
+            <h2 class="section-title">Company Profile</h2>
+            <div class="constants-grid">
+                <div class="constant-card">
+                    <div class="constant-header">
+                        <div class="constant-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="constant-title">Registered Address</div>
+                    </div>
+                    <div class="constant-value">
+                        19, Jessy & Jenny Street,<br>
+                        Off Peter Odili Road,<br>
+                        Trans-Amadi, Port Harcourt,<br>
+                        Rivers State, Nigeria.
+                    </div>
+                </div>
+
+                <div class="constant-card">
+                    <div class="constant-header">
+                        <div class="constant-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <div class="constant-title">Corporate Website</div>
+                    </div>
+                    <div class="constant-value">
+                        <a href="https://atlanticfluids.com/" target="_blank">
+                            atlanticfluids.com
+                        </a>
+                    </div>
+                </div>
+
+                <div class="constant-card">
+                    <div class="constant-header">
+                        <div class="constant-icon">
+                            <i class="fas fa-camera-retro"></i>
+                        </div>
+                        <div class="constant-title">Brand Assets</div>
+                    </div>
+                    <div class="constant-value">
+                        <div class="logo-preview">
+                            <img src="qt=q_95.jpg" alt="Company Logo" 
+                                 style="max-width: 120px; margin-top: 10px;">
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
 
-            <label>User ID (unique):</label>
-            <input type="text" id="userId" required>
+        <!-- Employee Form Section -->
+        <div class="form-section">
+            <form id="contactForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Employee ID</label>
+                        <input type="text" id="userId" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="fullname" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Official Email</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Contact Number</label>
+                        <input type="tel" id="phone" required>
+                    </div>
+                </div>
 
-            <label>Full Name:</label>
-            <input type="text" id="fullname" required>
+                <!-- Social Media Section -->
+                <div class="social-section">
+                    <h3 class="section-subtitle">Social Profiles</h3>
+                    <div class="social-grid">
+                        <div class="form-group">
+                            <label>Facebook Profile</label>
+                            <input type="url" id="facebook">
+                        </div>
+                        <div class="form-group">
+                            <label>Twitter Handle</label>
+                            <input type="url" id="twitter">
+                        </div>
+                        <div class="form-group">
+                            <label>LinkedIn Profile</label>
+                            <input type="url" id="linkedin">
+                        </div>
+                    </div>
+                </div>
 
-            <label>Email:</label>
-            <input type="email" id="email" required>
-
-            <label>Phone:</label>
-            <input type="tel" id="phone" required>
-
-            <h3>Social Media Links</h3>
-            <label>Facebook URL:</label>
-            <input type="url" id="facebook">
-
-            <label>Twitter URL:</label>
-            <input type="url" id="twitter">
-
-            <label>LinkedIn URL:</label>
-            <input type="url" id="linkedin">
-
-            <button type="submit">Save Contact</button>
-        </form>
+                <!-- Submit Section -->
+                <div class="submit-section">
+                    <button type="submit">
+                        <i class="fas fa-save"></i> Save Employee Profile
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 
-    <!-- Firebase SDK -->
+    <!-- Firebase Integration -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-
     <script>
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCXCsqN-xwQ-3_bt2dTaxbmywSW002zOW4",
             authDomain: "atlantic-fluids.firebaseapp.com",
@@ -111,11 +295,9 @@
             appId: "1:92805829518:web:4aadfe255fd9bdc2348adf"
         };
 
-        // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Form Submission Handler
         document.getElementById('contactForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -124,9 +306,9 @@
                 fullname: document.getElementById('fullname').value.trim(),
                 email: document.getElementById('email').value.trim(),
                 phone: document.getElementById('phone').value.trim(),
-                website: document.getElementById('constantWebsite').value,
-                address: document.getElementById('constantAddress').value,
-                logo: document.getElementById('constantLogo').value,
+                website: "https://atlanticfluids.com/",
+                address: `19, Jessy & Jenny Street,\nOff Peter Odili Road,\nTrans-Amadi, Port Harcourt,\nRivers State, Nigeria.`,
+                logo: "qt=q_95.jpg",
                 social: {
                     facebook: document.getElementById('facebook').value.trim(),
                     twitter: document.getElementById('twitter').value.trim(),
@@ -135,14 +317,12 @@
             };
 
             try {
-                // Validate required fields
                 if (!newContact.userId || !newContact.fullname || !newContact.email || !newContact.phone) {
-                    throw new Error("Please fill all required fields");
+                    throw new Error("Please complete all required fields");
                 }
 
-                // Save to Firestore
                 await db.collection("contacts").doc(newContact.userId).set(newContact);
-                alert('Contact saved successfully!');
+                alert('Profile saved successfully!');
                 document.getElementById('contactForm').reset();
             } catch (error) {
                 alert(`Error: ${error.message}`);
