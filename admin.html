@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel - Atlantic Fluids</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .admin-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        #contactForm {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .constant-field {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        label {
+            font-weight: 500;
+            color: #333;
+        }
+
+        input, textarea {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            background: #0056a8;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #003f7a;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <h1>Add New Contact</h1>
+        <form id="contactForm">
+            <div class="constant-field">
+                <h3>Company Constants</h3>
+                <label>Address:</label>
+                <textarea id="constantAddress" readonly>19, Jessy & Jenny Street, Off Peter Odili Road, Trans-Amadi, Port Harcourt, Rivers State, Nigeria.</textarea>
+                
+                <label>Website:</label>
+                <input type="url" id="constantWebsite" readonly value="https://atlanticfluids.com/">
+                
+                <label>Logo URL:</label>
+                <input type="url" id="constantLogo" readonly value="qt=q_95.jpg">
+            </div>
+
+            <label>User ID (unique):</label>
+            <input type="text" id="userId" required>
+
+            <label>Full Name:</label>
+            <input type="text" id="fullname" required>
+
+            <label>Email:</label>
+            <input type="email" id="email" required>
+
+            <label>Phone:</label>
+            <input type="tel" id="phone" required>
+
+            <h3>Social Media Links</h3>
+            <label>Facebook URL:</label>
+            <input type="url" id="facebook">
+
+            <label>Twitter URL:</label>
+            <input type="url" id="twitter">
+
+            <label>LinkedIn URL:</label>
+            <input type="url" id="linkedin">
+
+            <button type="submit">Save Contact</button>
+        </form>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCXCsqN-xwQ-3_bt2dTaxbmywSW002zOW4",
+            authDomain: "atlantic-fluids.firebaseapp.com",
+            projectId: "atlantic-fluids",
+            storageBucket: "atlantic-fluids.appspot.com",
+            messagingSenderId: "92805829518",
+            appId: "1:92805829518:web:4aadfe255fd9bdc2348adf"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Form Submission Handler
+        document.getElementById('contactForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const newContact = {
+                userId: document.getElementById('userId').value.trim(),
+                fullname: document.getElementById('fullname').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                website: document.getElementById('constantWebsite').value,
+                address: document.getElementById('constantAddress').value,
+                logo: document.getElementById('constantLogo').value,
+                social: {
+                    facebook: document.getElementById('facebook').value.trim(),
+                    twitter: document.getElementById('twitter').value.trim(),
+                    linkedin: document.getElementById('linkedin').value.trim()
+                }
+            };
+
+            try {
+                // Validate required fields
+                if (!newContact.userId || !newContact.fullname || !newContact.email || !newContact.phone) {
+                    throw new Error("Please fill all required fields");
+                }
+
+                // Save to Firestore
+                await db.collection("contacts").doc(newContact.userId).set(newContact);
+                alert('Contact saved successfully!');
+                document.getElementById('contactForm').reset();
+            } catch (error) {
+                alert(`Error: ${error.message}`);
+                console.error("Save error:", error);
+            }
+        });
+    </script>
+</body>
+</html>
