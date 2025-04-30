@@ -4,7 +4,14 @@
     <title>Admin Panel - Atlantic Fluids</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        /* ===== Base Styles ===== */
+        :root {
+            --primary-color: #0056a8;
+            --secondary-color: #ffffff;
+            --accent-color: #f0f8ff;
+            --error-color: #dc3545;
+            --text-color: #2d3748;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -17,7 +24,6 @@
             padding: 2rem;
         }
 
-        /* ===== Admin Container ===== */
         .admin-container {
             max-width: 800px;
             margin: 2rem auto;
@@ -27,9 +33,8 @@
             overflow: hidden;
         }
 
-        /* ===== Header Section ===== */
         .admin-header {
-            background: #0056a8;
+            background: var(--primary-color);
             padding: 2rem;
             color: white;
             text-align: center;
@@ -41,15 +46,9 @@
             margin-bottom: 0.5rem;
         }
 
-        .admin-header p {
-            color: #e2e8f0;
-            font-size: 0.9rem;
-        }
-
-        /* ===== Company Constants Section ===== */
         .company-constants {
             padding: 2rem;
-            background: #f8faff;
+            background: var(--accent-color);
             border-bottom: 3px solid #e3efff;
         }
 
@@ -82,22 +81,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #0056a8;
+            color: var(--primary-color);
         }
 
-        .constant-title {
-            font-weight: 600;
-            color: #2d3748;
-            font-size: 0.95rem;
-        }
-
-        .constant-value {
-            color: #4a5568;
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-        /* ===== Form Section ===== */
         .form-section {
             padding: 2rem;
         }
@@ -110,17 +96,18 @@
 
         .form-group {
             margin-bottom: 1.2rem;
+            position: relative;
         }
 
         label {
             display: block;
-            color: #2d3748;
+            color: var(--text-color);
             font-weight: 500;
             margin-bottom: 0.5rem;
             font-size: 0.9rem;
         }
 
-        input, textarea {
+        input, textarea, select {
             width: 100%;
             padding: 0.8rem 1rem;
             border: 1px solid #e2e8f0;
@@ -129,34 +116,68 @@
             transition: all 0.2s ease;
         }
 
-        input:focus, textarea:focus {
+        input:focus, textarea:focus, select:focus {
             outline: none;
-            border-color: #0056a8;
+            border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(0,86,168,0.1);
         }
 
-        /* ===== Social Media Section ===== */
-        .social-section {
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid #e2e8f0;
+        .dynamic-field-group {
+            position: relative;
+            margin-bottom: 0.5rem;
         }
 
-        .social-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
+        .dynamic-field-group:focus-within {
+            box-shadow: 0 0 0 2px rgba(0, 86, 168, 0.1);
         }
 
-        /* ===== Submit Button ===== */
+        .add-field-btn {
+            background: #e3efff;
+            color: var(--primary-color);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .add-field-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .remove-field-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(220, 53, 69, 0.1);
+            border: none;
+            color: var(--error-color);
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .remove-field-btn:hover {
+            background: var(--error-color);
+            color: white;
+        }
+
         .submit-section {
             padding: 2rem;
-            background: #f8faff;
+            background: var(--accent-color);
             border-top: 1px solid #e2e8f0;
         }
 
-        button {
-            background: #0056a8;
+        button[type="submit"] {
+            background: var(--primary-color);
             color: white;
             padding: 1rem 2rem;
             border: none;
@@ -167,23 +188,36 @@
             transition: all 0.2s ease;
         }
 
-        button:hover {
+        button[type="submit"]:hover {
             background: #003f7a;
             transform: translateY(-1px);
+        }
+
+        .required-asterisk::after {
+            content: '*';
+            color: var(--error-color);
+            margin-left: 3px;
+        }
+
+        @media (max-width: 768px) {
+            .admin-container {
+                margin: 1rem auto;
+            }
+            
+            .form-section {
+                padding: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="admin-container">
-        <!-- Header -->
         <div class="admin-header">
             <h1>Atlantic Fluids CRM</h1>
             <p>Employee Profile Management System</p>
         </div>
 
-        <!-- Company Information Section -->
         <div class="company-constants">
-            <h2 class="section-title">Company Profile</h2>
             <div class="constants-grid">
                 <div class="constant-card">
                     <div class="constant-header">
@@ -223,56 +257,65 @@
                     </div>
                     <div class="constant-value">
                         <div class="logo-preview">
-                            <img src="qt=q_95.jpg" alt="Company Logo" 
-                                 style="max-width: 120px; margin-top: 10px;">
+                            <img src="qt=q_95.jpg" alt="Company Logo" style="max-width: 120px; margin-top: 10px;">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Employee Form Section -->
         <div class="form-section">
             <form id="contactForm">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label>Employee ID</label>
+                        <label class="required-asterisk">Employee ID</label>
                         <input type="text" id="userId" required>
                     </div>
+                    
                     <div class="form-group">
-                        <label>Full Name</label>
+                        <label class="required-asterisk">Full Name</label>
                         <input type="text" id="fullname" required>
                     </div>
+
                     <div class="form-group">
-                        <label>Official Email</label>
-                        <input type="email" id="email" required>
+                        <label class="required-asterisk">Position/Rank</label>
+                        <select id="position" required>
+                            <option value="">Select Position</option>
+                            <option>Managing Director</option>
+                            <option>Operations Manager</option>
+                            <option>Senior Engineer</option>
+                            <option>Technical Staff</option>
+                            <option>Support Staff</option>
+                        </select>
                     </div>
+
                     <div class="form-group">
-                        <label>Contact Number</label>
-                        <input type="tel" id="phone" required>
+                        <label class="required-asterisk">Email Addresses</label>
+                        <div id="emailContainer">
+                            <div class="dynamic-field-group">
+                                <input type="email" class="email-input" placeholder="example@atlantic.com" required>
+                                <button type="button" class="remove-field-btn" onclick="handleRemoveField(this)">&times;</button>
+                            </div>
+                        </div>
+                        <button type="button" class="add-field-btn" onclick="addEmailField()">
+                            <i class="fas fa-plus"></i> Add Email
+                        </button>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="required-asterisk">Phone Numbers</label>
+                        <div id="phoneContainer">
+                            <div class="dynamic-field-group">
+                                <input type="tel" class="phone-input" placeholder="+234 123 456 7890" required>
+                                <button type="button" class="remove-field-btn" onclick="handleRemoveField(this)">&times;</button>
+                            </div>
+                        </div>
+                        <button type="button" class="add-field-btn" onclick="addPhoneField()">
+                            <i class="fas fa-plus"></i> Add Phone
+                        </button>
                     </div>
                 </div>
 
-                <!-- Social Media Section -->
-                <div class="social-section">
-                    <h3 class="section-subtitle">Social Profiles</h3>
-                    <div class="social-grid">
-                        <div class="form-group">
-                            <label>Facebook Profile</label>
-                            <input type="url" id="facebook">
-                        </div>
-                        <div class="form-group">
-                            <label>Twitter Handle</label>
-                            <input type="url" id="twitter">
-                        </div>
-                        <div class="form-group">
-                            <label>LinkedIn Profile</label>
-                            <input type="url" id="linkedin">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Submit Section -->
                 <div class="submit-section">
                     <button type="submit">
                         <i class="fas fa-save"></i> Save Employee Profile
@@ -282,7 +325,6 @@
         </div>
     </div>
 
-    <!-- Firebase Integration -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     <script>
@@ -298,37 +340,125 @@
         const app = firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
+        // Field Validation Functions
+        const isValidEmail = email => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        const isValidPhone = phone => /^\+?[\d\s()-]{7,}$/.test(phone);
+
+        // Dynamic Field Management
+        function createField(type, containerId) {
+            const container = document.getElementById(containerId);
+            const fieldGroup = document.createElement('div');
+            fieldGroup.className = 'dynamic-field-group';
+            
+            const input = document.createElement('input');
+            input.type = type;
+            input.className = `${type}-input`;
+            input.placeholder = type === 'email' ? 'example@atlantic.com' : '+234 123 456 7890';
+            
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.className = 'remove-field-btn';
+            removeBtn.innerHTML = '&times;';
+            removeBtn.onclick = () => handleRemoveField(removeBtn);
+
+            input.addEventListener('blur', () => validateField(input, type));
+            
+            fieldGroup.append(input, removeBtn);
+            container.appendChild(fieldGroup);
+            validateAllFields();
+        }
+
+        function handleRemoveField(button) {
+            const container = button.closest('.dynamic-field-group').parentElement;
+            if (container.children.length > 1) {
+                button.closest('.dynamic-field-group').remove();
+                validateAllFields();
+            }
+        }
+
+        function validateField(input, type) {
+            const value = input.value.trim();
+            let isValid = false;
+            const errorColor = getComputedStyle(document.documentElement)
+                .getPropertyValue('--error-color').trim();
+            
+            if (value) {
+                isValid = type === 'email' ? isValidEmail(value) : isValidPhone(value);
+                input.style.borderColor = isValid ? '#e2e8f0' : errorColor;
+                input.setCustomValidity(isValid ? '' : 'Invalid format');
+            }
+            
+            return isValid;
+        }
+
+        function validateAllFields() {
+            const emailValid = Array.from(document.querySelectorAll('.email-input'))
+                .some(input => validateField(input, 'email'));
+            
+            const phoneValid = Array.from(document.querySelectorAll('.phone-input'))
+                .some(input => validateField(input, 'tel'));
+
+            const submitBtn = document.querySelector('button[type="submit"]');
+            submitBtn.disabled = !(emailValid && phoneValid);
+        }
+
+        // Field Creation Functions
+        function addEmailField() {
+            createField('email', 'emailContainer');
+        }
+
+        function addPhoneField() {
+            createField('tel', 'phoneContainer');
+        }
+
+        // Form Handling
+        function resetForm() {
+            document.getElementById('contactForm').reset();
+            
+            ['emailContainer', 'phoneContainer'].forEach(containerId => {
+                const container = document.getElementById(containerId);
+                while (container.children.length > 1) container.lastChild.remove();
+            });
+            
+            validateAllFields();
+        }
+
+        // Form Submission
         document.getElementById('contactForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const newContact = {
                 userId: document.getElementById('userId').value.trim(),
                 fullname: document.getElementById('fullname').value.trim(),
-                email: document.getElementById('email').value.trim(),
-                phone: document.getElementById('phone').value.trim(),
+                position: document.getElementById('position').value,
+                emails: Array.from(document.querySelectorAll('.email-input'))
+                    .map(input => input.value.trim())
+                    .filter(isValidEmail),
+                phones: Array.from(document.querySelectorAll('.phone-input'))
+                    .map(input => input.value.trim())
+                    .filter(isValidPhone),
                 website: "https://atlanticfluids.com/",
                 address: `19, Jessy & Jenny Street,\nOff Peter Odili Road,\nTrans-Amadi, Port Harcourt,\nRivers State, Nigeria.`,
-                logo: "qt=q_95.jpg",
-                social: {
-                    facebook: document.getElementById('facebook').value.trim(),
-                    twitter: document.getElementById('twitter').value.trim(),
-                    linkedin: document.getElementById('linkedin').value.trim()
-                }
+                logo: "qt=q_95.jpg"
             };
 
             try {
-                if (!newContact.userId || !newContact.fullname || !newContact.email || !newContact.phone) {
-                    throw new Error("Please complete all required fields");
+                if (!newContact.userId || !newContact.fullname || !newContact.position ||
+                    newContact.emails.length === 0 || newContact.phones.length === 0) {
+                    throw new Error("Please complete all required fields with valid information");
                 }
 
                 await db.collection("contacts").doc(newContact.userId).set(newContact);
                 alert('Profile saved successfully!');
-                document.getElementById('contactForm').reset();
+                resetForm();
             } catch (error) {
                 alert(`Error: ${error.message}`);
                 console.error("Save error:", error);
             }
         });
+
+        // Initial Validation
+        validateAllFields();
     </script>
 </body>
 </html>
