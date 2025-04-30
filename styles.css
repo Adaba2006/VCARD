@@ -2,6 +2,10 @@
     --primary-color: #0056a8;
     --secondary-color: #ffffff;
     --accent-color: #f0f8ff;
+    --error-color: #dc3545;
+    --text-color: #2d3748;
+    --muted-color: #6c757d;
+    --error-rgb: 220, 53, 69;
 }
 
 * {
@@ -20,6 +24,7 @@ body {
     padding: 20px;
 }
 
+/* ==================== vCard Container ==================== */
 .vcard-container {
     background: var(--secondary-color);
     border-radius: 15px;
@@ -29,36 +34,35 @@ body {
     width: 95%;
     margin: 20px auto;
     transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
 }
 
-.error {
-    color: #dc3545;
-    padding: 20px;
-    text-align: center;
-    font-weight: bold;
-    border: 1px solid #dc3545;
-    border-radius: 8px;
-    margin: 20px;
+.vcard-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--primary-color);
+    transition: inherit;
 }
-
-/* Keep all your original styles from the previous CSS */
-/* Add this at the end of your existing CSS */
 
 .vcard-container:hover {
     transform: translateY(-5px);
     box-shadow: 0 15px 35px rgba(0,0,0,0.15);
 }
 
+/* ==================== Logo Section ==================== */
 .logo-section {
     text-align: center;
     margin-bottom: 30px;
-    position: relative;
 }
 
 .logo {
     width: 100%;
     margin: 0 auto 25px;
-    text-align: center;
 }
 
 .logo img {
@@ -68,24 +72,19 @@ body {
     height: auto;
     object-fit: contain;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+    transition: transform 0.3s ease;
 }
 
-.company-name {
-    color: var(--primary-color);
-    font-size: clamp(1.5rem, 4vw, 2rem);
-    margin: 15px 0 10px;
-    line-height: 1.3;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    word-wrap: break-word;
+.logo:hover img {
+    transform: scale(1.02);
 }
 
+/* ==================== Personal Info ==================== */
 .personal-name {
-    font-size: clamp(1.2rem, 3vw, 1.5rem);
-    color: #2d3748;
-    margin-bottom: 25px;
-    font-weight: 600;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: var(--text-color);
+    margin: 15px 0;
+    font-weight: 700;
     position: relative;
     padding-bottom: 15px;
 }
@@ -99,8 +98,22 @@ body {
     width: 80px;
     height: 3px;
     background: var(--primary-color);
+    transition: width 0.3s ease;
 }
 
+.position-badge {
+    display: inline-block;
+    background: var(--primary-color);
+    color: var(--secondary-color);
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-top: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* ==================== Contact Information ==================== */
 .contact-info {
     list-style: none;
     margin: 25px 0;
@@ -114,7 +127,6 @@ body {
     background: #f8f9fa;
     border-radius: 8px;
     transition: all 0.2s ease;
-    flex-wrap: wrap;
     gap: 10px;
 }
 
@@ -126,23 +138,44 @@ body {
 .contact-info i {
     width: 35px;
     color: var(--primary-color);
-    margin-right: 12px;
-    font-size: 18px;
+    font-size: 1.2rem;
     text-align: center;
+    flex-shrink: 0;
 }
 
-.contact-info a {
-    color: #2d3748;
-    text-decoration: none;
-    font-size: clamp(0.9rem, 2vw, 1rem);
-    transition: color 0.2s ease;
-    word-break: break-all;
+/* ==================== Multiple Contact Fields ==================== */
+.multi-field {
+    align-items: flex-start;
+    flex-direction: column;
 }
 
-.contact-info a:hover {
-    color: var(--primary-color);
+.multi-values {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
+.email-item, .phone-item {
+    padding: 8px 12px;
+    background: var(--secondary-color);
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.email-item:hover, .phone-item:hover {
+    background: #e3efff;
+    transform: translateX(3px);
+}
+
+.no-data {
+    color: var(--muted-color);
+    font-style: italic;
+    padding: 8px 0;
+}
+
+/* ==================== Social Links ==================== */
 .social-links {
     display: flex;
     justify-content: center;
@@ -152,7 +185,7 @@ body {
 
 .social-links a {
     color: var(--primary-color);
-    font-size: 24px;
+    font-size: 1.5rem;
     transition: all 0.3s ease;
     width: 45px;
     height: 45px;
@@ -161,29 +194,31 @@ body {
     align-items: center;
     justify-content: center;
     background: var(--accent-color);
+    position: relative;
 }
 
 .social-links a:hover {
     color: var(--secondary-color);
     background: var(--primary-color);
-    transform: translateY(-3px);
+    transform: translateY(-3px) scale(1.1);
 }
 
-.vcard-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: var(--primary-color);
+/* ==================== Error Handling ==================== */
+.error {
+    color: var(--error-color);
+    padding: 1.5rem;
+    text-align: center;
+    font-weight: 700;
+    border: 2px solid var(--error-color);
+    border-radius: 10px;
+    margin: 2rem;
+    background: rgba(var(--error-rgb), 0.05);
 }
 
-/* Enhanced Responsive Design */
+/* ==================== Responsive Design ==================== */
 @media (max-width: 768px) {
     .vcard-container {
         padding: 30px;
-        border-radius: 12px;
     }
 
     .contact-info li {
@@ -199,36 +234,32 @@ body {
 @media (max-width: 480px) {
     .vcard-container {
         padding: 20px;
-        border-radius: 10px;
     }
 
-    .logo-section {
-        margin-bottom: 20px;
-    }
-
-    .logo img {
-        max-width: 300px;
+    .personal-name {
+        font-size: 1.4rem;
+        padding-bottom: 10px;
     }
 
     .personal-name::after {
-        width: 50px;
+        width: 60px;
         height: 2px;
+    }
+
+    .logo img {
+        max-width: 250px;
     }
 
     .contact-info li {
         flex-direction: column;
         align-items: flex-start;
-    }
-
-    .contact-info i {
-        margin-right: 0;
-        margin-bottom: 5px;
+        gap: 8px;
     }
 
     .social-links a {
         width: 40px;
         height: 40px;
-        font-size: 20px;
+        font-size: 1.2rem;
     }
 }
 
@@ -237,20 +268,8 @@ body {
         padding: 15px;
     }
 
-    .company-name {
-        letter-spacing: 0.3px;
-    }
-
-    .contact-info li {
-        padding: 8px;
-    }
-}
-@media (max-width: 480px) {
-    .admin-container {
-        padding: 15px;
-    }
-    
-    .constant-field {
-        padding: 10px;
+    .position-badge {
+        font-size: 0.8rem;
+        padding: 0.4rem 1rem;
     }
 }
