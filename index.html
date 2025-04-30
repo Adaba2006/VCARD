@@ -6,43 +6,105 @@
     <title>Atlantic Fluids vCard</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="vcard-container">
         <div class="logo-section">
             <div class="logo">
-                <img src="qt=q_95.jpg" alt="Atlantic Fluids Logo">
+                <img id="user-logo" src="qt=q_95.jpg" alt="Atlantic Fluids Logo">
             </div>
-            <h2 class="personal-name">ADABA TEMITOPE OLUSEGUN</h2>
+            <h2 class="personal-name" id="fullname">Loading...</h2>
         </div>
 
         <ul class="contact-info">
             <li>
                 <i class="fas fa-envelope"></i>
-                <a href="mailto:temitope.adaba@gmail.com">temitope.adaba@gmail.com</a>
+                <a id="email" href="#">...</a>
             </li>
             <li>
                 <i class="fas fa-phone"></i>
-                <a href="tel:+08035462105">08035462105</a>
+                <a id="phone" href="#">...</a>
             </li>
             <li>
                 <i class="fas fa-globe"></i>
-                <a href="https://atlanticfluids.com/">https://atlanticfluids.com/</a>
+                <a id="website" href="#">...</a>
             </li>
             <li>
                 <i class="fas fa-map-marker-alt"></i>
-                19, Jessy & Jenny Street, Off Peter Odili Road, Trans-Amadi, Port Harcourt, Rivers State, Nigeria.
+                <span id="address">...</span>
             </li>
         </ul>
 
-        <div class="social-links">
-            <a href="#"><i class="fab fa-facebook"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-linkedin"></i></a>
-        </div>
+        <div class="social-links" id="social-links"></div>
     </div>
 
-    <script src="scripts.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Your Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyCXCsqN-xwQ-3_bt2dTaxbmywSW002zOW4",
+            authDomain: "atlantic-fluids.firebaseapp.com",
+            projectId: "atlantic-fluids",
+            storageBucket: "atlantic-fluids.appspot.com",
+            messagingSenderId: "92805829518",
+            appId: "1:92805829518:web:4aadfe255fd9bdc2348adf"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Get user ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('id') || 'default';
+
+        // Load user data
+        db.collection("contacts").doc(userId).get()
+            .then((doc) => {
+                if (doc.exists) {
+                    const user = doc.data();
+                    updateUI(user);
+                } else {
+                    showError("User not found! Check the ID in the URL");
+                }
+            })
+            .catch((error) => {
+                showError("Error loading data: " + error.message);
+            });
+
+        function updateUI(user) {
+            // Basic Info
+            document.getElementById('fullname').textContent = user.fullname;
+            document.getElementById('email').href = `mailto:${user.email}`;
+            document.getElementById('email').textContent = user.email;
+            document.getElementById('phone').href = `tel:${user.phone}`;
+            document.getElementById('phone').textContent = user.phone;
+            document.getElementById('website').href = user.website;
+            document.getElementById('website').textContent = user.website;
+            document.getElementById('address').textContent = user.address;
+
+            // Social Links
+            const socialLinks = document.getElementById('social-links');
+            socialLinks.innerHTML = [
+                user.social?.facebook ? `<a href="${user.social.facebook}"><i class="fab fa-facebook"></i></a>` : '',
+                user.social?.twitter ? `<a href="${user.social.twitter}"><i class="fab fa-twitter"></i></a>` : '',
+                user.social?.linkedin ? `<a href="${user.social.linkedin}"><i class="fab fa-linkedin"></i></a>` : ''
+            ].join('');
+
+            // Logo
+            if(user.logo) {
+                document.getElementById('user-logo').src = user.logo;
+            }
+        }
+
+        function showError(message) {
+            document.querySelector('.vcard-container').innerHTML = `
+                <div class="error">${message}</div>
+            `;
+        }
+    </script>
 </body>
 </html>
