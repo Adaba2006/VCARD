@@ -14,20 +14,21 @@
                 <img id="user-logo" src="qt=q_95.jpg" alt="Atlantic Fluids Logo">
             </div>
             <h2 class="personal-name" id="fullname">Loading...</h2>
+            <div class="position-badge" id="position"></div>
         </div>
 
         <ul class="contact-info">
-            <li>
+            <li class="multi-field">
                 <i class="fas fa-envelope"></i>
-                <a id="email" href="#">...</a>
+                <div class="multi-values" id="emails"></div>
             </li>
-            <li>
+            <li class="multi-field">
                 <i class="fas fa-phone"></i>
-                <a id="phone" href="#">...</a>
+                <div class="multi-values" id="phones"></div>
             </li>
             <li>
                 <i class="fas fa-globe"></i>
-                <a id="website" href="#">...</a>
+                <a id="website" href="#" target="_blank">...</a>
             </li>
             <li>
                 <i class="fas fa-map-marker-alt"></i>
@@ -38,12 +39,9 @@
         <div class="social-links" id="social-links"></div>
     </div>
 
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-
     <script>
-        // Your Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyCXCsqN-xwQ-3_bt2dTaxbmywSW002zOW4",
             authDomain: "atlantic-fluids.firebaseapp.com",
@@ -53,15 +51,12 @@
             appId: "1:92805829518:web:4aadfe255fd9bdc2348adf"
         };
 
-        // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Get user ID from URL
         const urlParams = new URLSearchParams(window.location.search);
         const userId = urlParams.get('id') || 'default';
 
-        // Load user data
         db.collection("contacts").doc(userId).get()
             .then((doc) => {
                 if (doc.exists) {
@@ -77,25 +72,48 @@
 
         function updateUI(user) {
             // Basic Info
-            document.getElementById('fullname').textContent = user.fullname;
-            document.getElementById('email').href = `mailto:${user.email}`;
-            document.getElementById('email').textContent = user.email;
-            document.getElementById('phone').href = `tel:${user.phone}`;
-            document.getElementById('phone').textContent = user.phone;
-            document.getElementById('website').href = user.website;
-            document.getElementById('website').textContent = user.website;
-            document.getElementById('address').textContent = user.address;
+            document.getElementById('fullname').textContent = user.fullname || 'No Name Provided';
+            document.getElementById('position').textContent = user.position || 'No Position Specified';
+            document.getElementById('website').href = user.website || '#';
+            document.getElementById('website').textContent = user.website || 'No Website';
+            document.getElementById('address').textContent = user.address || 'No Address Provided';
 
-            // Social Links
+            // Handle emails
+            const emailsContainer = document.getElementById('emails');
+            if (user.emails?.length) {
+                emailsContainer.innerHTML = user.emails.map(email => `
+                    <div class="email-item">
+                        <a href="mailto:${email}">${email}</a>
+                    </div>
+                `).join('');
+            } else {
+                emailsContainer.innerHTML = '<div class="no-data">No emails available</div>';
+            }
+
+            // Handle phones
+            const phonesContainer = document.getElementById('phones');
+            if (user.phones?.length) {
+                phonesContainer.innerHTML = user.phones.map(phone => `
+                    <div class="phone-item">
+                        <a href="tel:${phone}">${phone}</a>
+                    </div>
+                `).join('');
+            } else {
+                phonesContainer.innerHTML = '<div class="no-data">No phone numbers available</div>';
+            }
+
+            // Handle social links
             const socialLinks = document.getElementById('social-links');
-            socialLinks.innerHTML = [
-                user.social?.facebook ? `<a href="${user.social.facebook}"><i class="fab fa-facebook"></i></a>` : '',
-                user.social?.twitter ? `<a href="${user.social.twitter}"><i class="fab fa-twitter"></i></a>` : '',
-                user.social?.linkedin ? `<a href="${user.social.linkedin}"><i class="fab fa-linkedin"></i></a>` : ''
-            ].join('');
+            if (user.social) {
+                socialLinks.innerHTML = `
+                    ${user.social.facebook ? `<a href="${user.social.facebook}" target="_blank"><i class="fab fa-facebook"></i></a>` : ''}
+                    ${user.social.twitter ? `<a href="${user.social.twitter}" target="_blank"><i class="fab fa-twitter"></i></a>` : ''}
+                    ${user.social.linkedin ? `<a href="${user.social.linkedin}" target="_blank"><i class="fab fa-linkedin"></i></a>` : ''}
+                `;
+            }
 
-            // Logo
-            if(user.logo) {
+            // Update logo
+            if (user.logo) {
                 document.getElementById('user-logo').src = user.logo;
             }
         }
