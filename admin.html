@@ -274,18 +274,6 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="required-asterisk">Position/Rank</label>
-                        <select id="position" required>
-                            <option value="">Select Position</option>
-                            <option>Managing Director</option>
-                            <option>Operations Manager</option>
-                            <option>Senior Engineer</option>
-                            <option>Technical Staff</option>
-                            <option>Support Staff</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
                         <label class="required-asterisk">Email Addresses</label>
                         <div id="emailContainer">
                             <div class="dynamic-field-group">
@@ -417,7 +405,6 @@
             const newContact = {
                 userId: document.getElementById('userId').value.trim(),
                 fullname: document.getElementById('fullname').value.trim(),
-                position: document.getElementById('position').value,
                 emails: Array.from(document.querySelectorAll('.email-input'))
                     .map(input => input.value.trim())
                     .filter(email => email && isValidEmail(email)),
@@ -430,14 +417,11 @@
             };
 
             try {
-                // Validate required fields
                 if (!newContact.userId) throw new Error("Employee ID is required");
                 if (!newContact.fullname) throw new Error("Full name is required");
-                if (!newContact.position) throw new Error("Position is required");
                 if (newContact.emails.length === 0) throw new Error("At least one valid email required");
                 if (newContact.phones.length === 0) throw new Error("At least one valid phone number required");
 
-                // Ensure array format
                 newContact.emails = Array.isArray(newContact.emails) ? newContact.emails : [newContact.emails];
                 newContact.phones = Array.isArray(newContact.phones) ? newContact.phones : [newContact.phones];
 
