@@ -1,0 +1,279 @@
+:root {
+    --primary-blue: #0066CC;
+    --dark-blue: #004799;
+    --light-blue: #E6F2FF;
+    --white: #FFFFFF;
+    --text-dark: #2D3748;
+    --text-light: #718096;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #f6f9fc 0%, #ebf0f5 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+.vcard-container {
+    background: var(--white);
+    border-radius: 1.5rem;
+    box-shadow: var(--shadow);
+    max-width: 800px;
+    width: 100%;
+    overflow: hidden;
+    margin: 1rem;
+}
+
+/* Header Section */
+.vcard-header {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 120%);
+    padding: 0 0 2rem 0;
+    color: var(--white);
+    position: relative;
+}
+
+.logo-banner {
+    width: 100%;
+    padding: 2rem;
+    background: rgba(255,255,255,0.1);
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.logo-image {
+    max-width: 600px;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 1rem;
+    box-shadow: 0 8px 25px rgba(0, 86, 168, 0.15);
+}
+
+.header-content {
+    text-align: center;
+    padding: 0 2rem;
+}
+
+.personal-name {
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--white);
+    line-height: 1.2;
+}
+
+.company-info {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.9);
+    line-height: 1.4;
+}
+
+.company-abbr {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 0.25rem;
+}
+
+.company-fullname {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 400;
+}
+
+/* Main Content */
+.vcard-main {
+    padding: 2rem 2rem 3rem;
+}
+
+.contact-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.contact-card {
+    background: var(--white);
+    border-radius: 1.25rem;
+    padding: 1.75rem;
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(230, 242, 255, 0.8);
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+}
+
+.contact-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 86, 168, 0.12);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.contact-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(230, 242, 255, 0.5);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-blue);
+    font-size: 1.6rem;
+}
+
+.card-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.contact-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.contact-item {
+    padding: 1rem;
+    background: var(--light-blue);
+    border-radius: 0.75rem;
+    transition: var(--transition);
+}
+
+.contact-link {
+    color: var(--text-dark);
+    text-decoration: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 500;
+}
+
+.link-icon {
+    color: var(--primary-blue);
+    transition: transform 0.2s ease;
+}
+
+.contact-item:hover {
+    background: var(--white);
+    transform: translateX(5px);
+}
+
+.website-link {
+    display: block;
+    padding: 1rem;
+    background: var(--light-blue);
+    border-radius: 0.75rem;
+    color: var(--primary-blue);
+    text-decoration: none;
+    text-align: center;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.website-link:hover {
+    background: var(--primary-blue);
+    color: var(--white);
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    padding-top: 2rem;
+    margin-top: 2rem;
+    border-top: 2px solid var(--light-blue);
+}
+
+.social-link {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--light-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-blue);
+    transition: var(--transition);
+}
+
+.social-link:hover {
+    background: var(--primary-blue);
+    color: var(--white);
+    transform: translateY(-3px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .logo-banner {
+        padding: 1.5rem;
+    }
+    
+    .personal-name {
+        font-size: 2rem;
+    }
+    
+    .company-abbr {
+        font-size: 1.5rem;
+    }
+    
+    .company-fullname {
+        font-size: 1rem;
+    }
+    
+    .vcard-main {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .personal-name {
+        font-size: 1.8rem;
+    }
+    
+    .company-info {
+        font-size: 1rem;
+    }
+    
+    .contact-card {
+        padding: 1.5rem;
+    }
+    
+    .contact-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.4rem;
+    }
+}
