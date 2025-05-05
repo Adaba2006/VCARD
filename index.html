@@ -186,6 +186,20 @@
             justify-content: center;
         }
 
+        .error-container {
+            padding: 2rem;
+            text-align: center;
+            color: #dc3545;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .error-container i {
+            font-size: 3rem;
+        }
+
         /* Responsive Adjustments */
         @media (max-width: 768px) {
             .content-grid {
@@ -260,10 +274,10 @@
 <body>
     <div class="vcard-container">
         <header class="header-section">
-            <div class="company-logo">
-                <img src="qt=q_95.jpg" alt="Atlantic Fluids Logo">
+            <div class="company-logo" id="companyLogo">
+                <img src="logo1.jpg" alt="Atlantic Fluids Logo">
             </div>
-            <h1 class="company-name" id="fullname">Atlantic Fluids</h1>
+            <h1 class="company-name" id="fullName">Atlantic Fluids</h1>
         </header>
 
         <main>
@@ -342,31 +356,41 @@
         const db = firebase.firestore();
 
         const urlParams = new URLSearchParams(window.location.search);
-        const userId = urlParams.get('id') || 'default';
+        const userId = urlParams.get('id');
 
-        db.collection("contacts").doc(userId).get()
-            .then((doc) => {
-                if (doc.exists) {
-                    const user = doc.data();
-                    updateUI(user);
-                } else {
-                    showError("Profile not found. Please check the ID");
-                }
-            })
-            .catch((error) => {
-                showError("Failed to load data: " + error.message);
-            });
+        if (!userId) {
+            showError("No profile ID provided. Please check the URL.");
+        } else {
+            // Changed from "contacts" to "profiles" to match admin panel
+            db.collection("profiles").doc(userId).get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        const profile = doc.data();
+                        updateUI(profile);
+                    } else {
+                        showError("Profile not found. Please check the ID");
+                    }
+                })
+                .catch((error) => {
+                    showError("Failed to load data: " + error.message);
+                });
+        }
 
-        function updateUI(user) {
-            // Update Company Name
-            document.getElementById('fullname').textContent = user.fullname || 'Atlantic Fluids';
+        function updateUI(profile) {
+            // Update Name
+            document.getElementById('fullName').textContent = profile.fullName || 'Atlantic Fluids';
+            
+            // Update Logo
+            if (profile.companyLogo) {
+                document.querySelector('#companyLogo img').src = profile.companyLogo;
+            }
 
             // Update Website
             const websiteElement = document.getElementById('website');
-            if (user.website) {
-                websiteElement.href = user.website;
+            if (profile.website) {
+                websiteElement.href = profile.website;
                 websiteElement.querySelector('span').textContent = 
-                    new URL(user.website).hostname.replace('www.', '');
+                    new URL(profile.website).hostname.replace('www.', '');
             } else {
                 websiteElement.querySelector('span').textContent = 'No website available';
                 websiteElement.removeAttribute('href');
@@ -374,17 +398,19 @@
 
             // Update Address
             const addressElement = document.getElementById('address');
-            if (user.address) {
+            if (profile.address) {
                 addressElement.querySelector('span').innerHTML = 
-                    user.address.replace(/\n/g, '<br>');
+                    profile.address.replace(/\n/g, '<br>');
             } else {
                 addressElement.querySelector('span').textContent = 'Address not available';
             }
 
-            // Update Contact Lists
-            populateContactList('emails', user.emails, 'envelope', 'mailto:');
-            populateContactList('phones', user.phones, 'phone', 'tel:');
-            populateSocialLinks(user.social);
+            // Update Contact Lists - matching field names from admin panel
+            populateContactList('emails', profile.emails, 'envelope', 'mailto:');
+            populateContactList('phones', profile.phones, 'phone', 'tel:');
+            
+            // Update Social Links
+            populateSocialLinks(profile.social);
         }
 
         function populateContactList(containerId, items, icon, prefix) {
@@ -417,6 +443,17 @@
             const container = document.getElementById('social-links');
             container.innerHTML = '';
             
+            if (!social || Object.keys(social).length === 0) {
+                const emptyState = document.createElement('div');
+                emptyState.className = 'social-item';
+                emptyState.innerHTML = `
+                    <i class="fas fa-info-circle"></i>
+                    <span>No social links available</span>
+                `;
+                container.appendChild(emptyState);
+                return;
+            }
+            
             const platforms = [
                 { name: 'facebook', icon: 'facebook-f' },
                 { name: 'twitter', icon: 'twitter' },
@@ -425,11 +462,12 @@
             ];
 
             platforms.forEach(platform => {
-                if (social?.[platform.name]) {
+                if (social[platform.name]) {
                     const link = document.createElement('a');
                     link.className = 'social-item';
                     link.href = social[platform.name];
                     link.target = '_blank';
+                    link.rel = "noopener noreferrer";
                     link.innerHTML = `
                         <i class="fab fa-${platform.icon}"></i>
                         <span>${platform.name.charAt(0).toUpperCase() + platform.name.slice(1)}</span>
@@ -450,10 +488,24 @@
         }
 
         function formatPhone(phone) {
-            return phone.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+            // First clean the phone number to keep only digits
+            const cleaned = phone.replace(/\D/g, '');
+            
+            // Apply formatting based on the length
+            if (cleaned.length === 10) {
+                return `(${cleaned.substring(0, 3)}) ${cleaned.substring(3, 6)}-${cleaned.substring(6, 10)}`;
+            } else if (cleaned.length === 11 && cleaned.charAt(0) === '1') {
+                return `+1 (${cleaned.substring(1, 4)}) ${cleaned.substring(4, 7)}-${cleaned.substring(7, 11)}`;
+            } else {
+                // For international or non-standard numbers, return as is with minimal formatting
+                return phone;
+            }
         }
 
         function showError(message) {
+            const mainContent = document.querySelector('main');
+            mainContent.innerHTML = ''; // Clear existing content
+            
             const container = document.createElement('div');
             container.className = 'error-container';
             container.innerHTML = `
@@ -461,7 +513,7 @@
                 <h3>${message}</h3>
                 <p>Please try again later or contact support</p>
             `;
-            document.querySelector('main').prepend(container);
+            mainContent.appendChild(container);
         }
     </script>
 </body>
