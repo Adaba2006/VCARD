@@ -27,11 +27,11 @@
         body {
             background: #f8fafc;
             min-height: 100vh;
-            padding: 2rem;
+            padding: 1rem;
         }
 
         .admin-container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
             background: var(--white);
             border-radius: 1.5rem;
@@ -42,50 +42,50 @@
         /* Header Section */
         .admin-header {
             background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
-            padding: 2rem;
+            padding: 1.5rem;
             text-align: center;
             color: var(--white);
         }
 
         .header-title {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
+            font-size: 1.7rem;
+            margin-bottom: 0.4rem;
         }
 
         /* Main Content Grid */
         .content-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            padding: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.2rem;
+            padding: 1.5rem;
         }
 
         /* Company Constants Section */
         .constants-section {
             background: var(--light-blue);
-            padding: 2rem;
+            padding: 1.5rem;
             border-bottom: 2px solid rgba(0, 86, 168, 0.1);
         }
 
         .constant-card {
             background: var(--white);
             border-radius: 1rem;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
             box-shadow: var(--shadow);
         }
 
         .logo-selector {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin-top: 1rem;
+            gap: 0.8rem;
+            margin-top: 0.8rem;
         }
 
         .logo-option {
             position: relative;
             border: 2px solid transparent;
-            border-radius: 0.75rem;
+            border-radius: 0.6rem;
             cursor: pointer;
             transition: var(--transition);
         }
@@ -96,29 +96,32 @@
 
         .logo-preview {
             width: 100%;
-            padding: 0.5rem;
+            padding: 0.4rem;
         }
 
         .logo-preview img {
             width: 100%;
             height: auto;
-            border-radius: 0.5rem;
+            border-radius: 0.4rem;
         }
 
         .website-selector {
             display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
+            gap: 0.8rem;
+            margin-top: 0.8rem;
         }
 
         .website-option {
             flex: 1;
-            padding: 1rem;
+            padding: 0.8rem;
             border: 2px solid transparent;
-            border-radius: 0.75rem;
+            border-radius: 0.6rem;
             background: var(--white);
             cursor: pointer;
             transition: var(--transition);
+            font-size: 0.85rem;
+            text-align: center;
+            word-break: break-word;
         }
 
         .website-option.selected {
@@ -128,29 +131,36 @@
 
         /* Form Elements */
         .form-section {
-            padding: 2rem;
+            padding: 1.5rem;
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
 
         label {
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
             color: var(--text-dark);
             font-weight: 500;
+            font-size: 0.9rem;
         }
 
         input, select, textarea {
             width: 100%;
-            padding: 0.75rem;
+            padding: 0.6rem 1rem;
             border: 1px solid #e2e8f0;
-            border-radius: 0.75rem;
+            border-radius: 0.6rem;
             transition: var(--transition);
+            font-size: 0.9rem;
         }
 
-        input:focus, select:focus {
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--primary-blue);
             box-shadow: 0 0 0 3px rgba(0, 86, 168, 0.1);
@@ -158,18 +168,19 @@
 
         .dynamic-field-group {
             position: relative;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
         }
 
         .add-field-btn {
             background: var(--light-blue);
             color: var(--primary-blue);
             border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.4rem;
             cursor: pointer;
-            margin-top: 0.5rem;
+            margin-top: 0.4rem;
             transition: var(--transition);
+            font-size: 0.85rem;
         }
 
         .add-field-btn:hover {
@@ -179,26 +190,28 @@
 
         .remove-field-btn {
             position: absolute;
-            right: 0.5rem;
+            right: 0.4rem;
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
             color: var(--error-red);
             cursor: pointer;
-            padding: 0.25rem;
+            padding: 0.15rem;
+            font-size: 1.1rem;
         }
 
         .submit-btn {
             background: var(--primary-blue);
             color: var(--white);
-            padding: 1rem 2rem;
+            padding: 0.8rem 1.5rem;
             border: none;
-            border-radius: 0.75rem;
+            border-radius: 0.6rem;
             width: 100%;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
+            font-size: 0.95rem;
         }
 
         .submit-btn:hover {
@@ -206,12 +219,45 @@
             transform: translateY(-2px);
         }
 
+        /* Social media section */
+        .social-section {
+            background: var(--light-blue);
+            padding: 1rem;
+            border-radius: 0.6rem;
+            margin-top: 1rem;
+        }
+
+        .social-title {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.8rem;
+        }
+
+        .social-field {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .social-icon {
+            font-size: 1.2rem;
+            color: var(--primary-blue);
+            width: 20px;
+            text-align: center;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .content-grid {
                 grid-template-columns: 1fr;
-                padding: 1.5rem;
-                gap: 1.5rem;
+                gap: 1rem;
+                padding: 1rem;
             }
 
             .logo-selector {
@@ -221,19 +267,39 @@
             .website-selector {
                 flex-direction: column;
             }
-        }
-
-        @media (max-width: 480px) {
-            body {
-                padding: 1rem;
-            }
 
             .admin-header {
-                padding: 1.5rem;
+                padding: 1.2rem;
             }
 
             .header-title {
                 font-size: 1.5rem;
+            }
+
+            .social-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 0.8rem;
+            }
+
+            .constant-card {
+                padding: 1rem;
+            }
+
+            input, select, textarea {
+                padding: 0.5rem 0.8rem;
+            }
+
+            .submit-btn {
+                padding: 0.7rem 1rem;
+            }
+
+            .remove-field-btn {
+                right: 0.3rem;
             }
         }
     </style>
@@ -271,8 +337,8 @@
                         <div class="website-option" onclick="selectWebsite(this, 'https://atlanticfluids.com')">
                             https://atlanticfluids.com
                         </div>
-                        <div class="website-option" onclick="selectWebsite(this, 'https://afis.com.ng')">
-                            https://afis.com.ng
+                        <div class="website-option" onclick="selectWebsite(this, 'https://www.atlanticcompletions.com/')">
+                            https://www.atlanticcompletions.com
                         </div>
                     </div>
                 </div>
@@ -318,8 +384,35 @@
                         </button>
                     </div>
                 </div>
+                
+                <div class="form-group">
+                    <label>Company Address</label>
+                    <textarea id="address" placeholder="Enter full company address"></textarea>
+                </div>
 
-                <div class="form-group" style="margin-top: 2rem;">
+                <div class="social-section">
+                    <h3 class="social-title">Social Media Links</h3>
+                    <div class="social-grid">
+                        <div class="social-field">
+                            <i class="fab fa-facebook-f social-icon"></i>
+                            <input type="url" id="facebook" placeholder="Facebook URL">
+                        </div>
+                        <div class="social-field">
+                            <i class="fab fa-twitter social-icon"></i>
+                            <input type="url" id="twitter" placeholder="Twitter URL">
+                        </div>
+                        <div class="social-field">
+                            <i class="fab fa-linkedin-in social-icon"></i>
+                            <input type="url" id="linkedin" placeholder="LinkedIn URL">
+                        </div>
+                        <div class="social-field">
+                            <i class="fab fa-instagram social-icon"></i>
+                            <input type="url" id="instagram" placeholder="Instagram URL">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 1.5rem;">
                     <button type="submit" class="submit-btn">
                         <i class="fas fa-save"></i> Save Profile
                     </button>
@@ -344,7 +437,7 @@
         const db = firebase.firestore();
 
         // Company Constants State
-        let selectedLogo = 'qt=q_95.jpg';
+        let selectedLogo = 'logo1.jpg';
         let selectedWebsite = 'https://atlanticfluids.com';
 
         // Selection Functions
@@ -400,6 +493,19 @@
         document.getElementById('profileForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
+            // Get social media values
+            const social = {
+                facebook: document.getElementById('facebook').value || null,
+                twitter: document.getElementById('twitter').value || null,
+                linkedin: document.getElementById('linkedin').value || null,
+                instagram: document.getElementById('instagram').value || null
+            };
+
+            // Filter out empty social values
+            Object.keys(social).forEach(key => {
+                if (!social[key]) delete social[key];
+            });
+
             const profileData = {
                 employeeId: document.getElementById('employeeId').value,
                 fullName: document.getElementById('fullName').value,
@@ -407,6 +513,8 @@
                 phones: Array.from(document.querySelectorAll('.phone-input')).map(i => i.value),
                 companyLogo: selectedLogo,
                 website: selectedWebsite,
+                address: document.getElementById('address').value || null,
+                social: social,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             };
 
@@ -414,6 +522,18 @@
                 await db.collection('profiles').doc(profileData.employeeId).set(profileData);
                 alert('Profile saved successfully!');
                 document.getElementById('profileForm').reset();
+                
+                // Reset social media fields
+                document.getElementById('facebook').value = '';
+                document.getElementById('twitter').value = '';
+                document.getElementById('linkedin').value = '';
+                document.getElementById('instagram').value = '';
+                
+                // Reset dynamic fields
+                document.getElementById('emailContainer').innerHTML = '';
+                document.getElementById('phoneContainer').innerHTML = '';
+                addEmailField();
+                addPhoneField();
             } catch (error) {
                 alert(`Error saving profile: ${error.message}`);
             }
@@ -422,6 +542,106 @@
         // Initialize default selections
         document.querySelector('.logo-option').click();
         document.querySelector('.website-option').click();
+
+        // Check if editing existing profile
+        const urlParams = new URLSearchParams(window.location.search);
+        const editId = urlParams.get('edit');
+        
+        if (editId) {
+            db.collection('profiles').doc(editId).get().then((doc) => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    
+                    // Fill basic fields
+                    document.getElementById('employeeId').value = data.employeeId || '';
+                    document.getElementById('employeeId').readOnly = true; // Prevent changing ID when editing
+                    document.getElementById('fullName').value = data.fullName || '';
+                    document.getElementById('address').value = data.address || '';
+                    
+                    // Fill dynamic email fields
+                    document.getElementById('emailContainer').innerHTML = '';
+                    if (data.emails && data.emails.length > 0) {
+                        data.emails.forEach(email => {
+                            const fieldGroup = document.createElement('div');
+                            fieldGroup.className = 'dynamic-field-group';
+                            
+                            const input = document.createElement('input');
+                            input.type = 'email';
+                            input.className = 'email-input';
+                            input.value = email;
+                            input.required = true;
+                            
+                            const removeBtn = document.createElement('button');
+                            removeBtn.type = 'button';
+                            removeBtn.className = 'remove-field-btn';
+                            removeBtn.innerHTML = '×';
+                            removeBtn.onclick = () => removeField(removeBtn);
+                            
+                            fieldGroup.append(input, removeBtn);
+                            document.getElementById('emailContainer').appendChild(fieldGroup);
+                        });
+                    } else {
+                        addEmailField();
+                    }
+                    
+                    // Fill dynamic phone fields
+                    document.getElementById('phoneContainer').innerHTML = '';
+                    if (data.phones && data.phones.length > 0) {
+                        data.phones.forEach(phone => {
+                            const fieldGroup = document.createElement('div');
+                            fieldGroup.className = 'dynamic-field-group';
+                            
+                            const input = document.createElement('input');
+                            input.type = 'tel';
+                            input.className = 'phone-input';
+                            input.value = phone;
+                            input.required = true;
+                            
+                            const removeBtn = document.createElement('button');
+                            removeBtn.type = 'button';
+                            removeBtn.className = 'remove-field-btn';
+                            removeBtn.innerHTML = '×';
+                            removeBtn.onclick = () => removeField(removeBtn);
+                            
+                            fieldGroup.append(input, removeBtn);
+                            document.getElementById('phoneContainer').appendChild(fieldGroup);
+                        });
+                    } else {
+                        addPhoneField();
+                    }
+                    
+                    // Fill social media fields
+                    if (data.social) {
+                        document.getElementById('facebook').value = data.social.facebook || '';
+                        document.getElementById('twitter').value = data.social.twitter || '';
+                        document.getElementById('linkedin').value = data.social.linkedin || '';
+                        document.getElementById('instagram').value = data.social.instagram || '';
+                    }
+                    
+                    // Set logo selection
+                    if (data.companyLogo) {
+                        const logoOptions = document.querySelectorAll('.logo-option');
+                        logoOptions.forEach(option => {
+                            if (option.querySelector('img').src.includes(data.companyLogo)) {
+                                selectLogo(option, data.companyLogo);
+                            }
+                        });
+                    }
+                    
+                    // Set website selection
+                    if (data.website) {
+                        const websiteOptions = document.querySelectorAll('.website-option');
+                        websiteOptions.forEach(option => {
+                            if (option.textContent.trim() === data.website) {
+                                selectWebsite(option, data.website);
+                            }
+                        });
+                    }
+                }
+            }).catch(error => {
+                console.error("Error fetching profile for editing:", error);
+            });
+        }
     </script>
 </body>
 </html>
