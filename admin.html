@@ -443,9 +443,12 @@
             </form>
         </div>
     </div>
+    <div id="qr-temp" style="display:none;"></div>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCXCsqN-xwQ-3_bt2dTaxbmywSW002zOW4",
@@ -543,13 +546,40 @@
                 website: selectedWebsite,
                 address: companyAddress,
                 social: social,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                qrCode: null // Placeholder for QR code
+                
             };
+            const qrContainer = document.getElementById('qr-temp');
+            qrContainer.innerHTML = ''; // clear any previous
+
+    // Step 2: Generate QR code
+    new QRCode(qrContainer, {
+        text: `https://adaba2006.github.io/VCARD/?id=${userId}`, // Replace with your actual URL
+        width: 128,
+        height: 128
+    });
+
+    // Step 3: Wait for QR code to render and extract as base64
+    const qrBase64 = await new Promise((resolve) => {
+        setTimeout(() => {
+            const qrImg = qrContainer.querySelector('img');
+            if (qrImg) {
+                resolve(qrImg.src);
+            } else {
+                resolve(null);
+            }
+        }, 100); // Add a delay of 100ms to ensure QR code rendering
+    });
+
+    // Step 4: Add it to profileData
+    profileData.qrCode = qrBase64;
 
             try {
-                await db.collection('contacts').doc(userId).set(profileData);
-                alert('Profile saved successfully!');
+                await db.collection('profiles').doc(userId).set(profileData);
+                alert('Profile saved with QR Code!');
                 document.getElementById('profileForm').reset();
+            // Reset fields (same as before)
                 
                 // Reset social media fields
                 document.getElementById('facebook').value = '';
@@ -583,7 +613,7 @@
         const editId = urlParams.get('edit');
         
         if (editId) {
-            db.collection('contacts').doc(editId).get().then((doc) => {
+            db.collection('profiles').doc(editId).get().then((doc) => {
                 if (doc.exists) {
                     const data = doc.data();
                     
