@@ -196,6 +196,27 @@
             gap: 1rem;
         }
 
+        .qr-section {
+            padding: 1.5rem;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+
+        .qr-code-container {
+            margin: 1rem auto;
+            padding: 1rem;
+            background: var(--card-bg);
+            border-radius: 0.8rem;
+            display: inline-block;
+            box-shadow: var(--shadow);
+        }
+
+        .qr-code-container img {
+            max-width: 200px;
+            height: auto;
+            border-radius: 0.5rem;
+        }
+
         .error-container i {
             font-size: 3rem;
         }
@@ -255,6 +276,10 @@
 
             .contact-link span {
                 word-break: break-all;
+            }
+
+            .qr-code-container img {
+                max-width: 150px;
             }
         }
 
@@ -337,9 +362,14 @@
             <div class="social-section">
                 <div class="social-grid" id="social-links"></div>
             </div>
+
+            <div class="qr-section">
+                <div class="qr-code-container" id="vcardQrCode">
+                    <p>QR Code Loading...</p>
+                </div>
+            </div>
         </main>
     </div>
-   
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
@@ -370,7 +400,7 @@
 
         async function loadProfile(profileId) {
             try {
-                const doc = await db.collection("profile").doc(profileId).get();
+                const doc = await db.collection("profiles").doc(profileId).get();
                 
                 if (!doc.exists) {
                     showError("Profile not found");
@@ -378,23 +408,31 @@
                 }
 
                 const profile = doc.data();
-                console.log("Loaded profile data:", profile); // For debugging
                 updateUI(profile);
             } catch (error) {
                 showError(`Failed to load profile: ${error.message}`);
                 console.error("Error loading profile:", error);
+
             }
         }
 
         function updateUI(profile) {
-            // Update basic information
-            document.getElementById('fullName').textContent = profile.fullname || profile.fullName || 'Atlantic Fluids';
-            updateLogo(profile.logo || profile.companyLogo);
+            document.getElementById('fullName').textContent = profile.fullname || 'Atlantic Fluids';
+            updateLogo(profile.logo);
             updateWebsite(profile.website);
             updateAddress(profile.address);
-            updateContacts(profile)
-            ;
+            updateContacts(profile);
             updateSocialLinks(profile.social);
+            updateQRCode(profile.qrCode);
+        }
+
+        function updateQRCode(qrCode) {
+            const qrContainer = document.getElementById('vcardQrCode');
+            if (qrCode) {
+                qrContainer.innerHTML = `<img src="${qrCode}" alt="Profile QR Code">`;
+            } else {
+                qrContainer.innerHTML = '<p>QR Code not available</p>';
+            }
         }
 
         function updateLogo(logoPath) {
