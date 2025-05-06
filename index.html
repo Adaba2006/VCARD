@@ -339,7 +339,9 @@
             </div>
         </main>
     </div>
+   
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     <script>
@@ -368,7 +370,7 @@
 
         async function loadProfile(profileId) {
             try {
-                const doc = await db.collection("contacts").doc(profileId).get();
+                const doc = await db.collection("profile").doc(profileId).get();
                 
                 if (!doc.exists) {
                     showError("Profile not found");
@@ -390,7 +392,8 @@
             updateLogo(profile.logo || profile.companyLogo);
             updateWebsite(profile.website);
             updateAddress(profile.address);
-            updateContacts(profile);
+            updateContacts(profile)
+            ;
             updateSocialLinks(profile.social);
         }
 
