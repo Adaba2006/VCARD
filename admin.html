@@ -441,6 +441,9 @@
                 <div class="qr-section">
                     <h3>Generated QR Code</h3>
                     <div class="qr-code-container" id="qrCodeContainer"></div>
+                    <button id="adminDownloadBtn" class="download-btn" disabled>
+                        <i class="fas fa-download"></i> Download QR Code
+                    </button>
                     <p>Scan this code to access the profile</p>
                 </div>
 
@@ -540,13 +543,13 @@
 
             const qrContainer = document.getElementById('qrCodeContainer');
             qrContainer.innerHTML = '';
-            
+    
             new QRCode(qrContainer, {
                 text: qrUrl,
                 width: 200,
                 height: 200,
-                colorDark: "#0066CC",
-                colorLight: "#ffffff",
+                colorDark: "#000000",  // Black dots
+                colorLight: "#ffffff", // White background
                 correctLevel: QRCode.CorrectLevel.H
             });
 
@@ -556,6 +559,22 @@
                     resolve(qrImg ? qrImg.src : null);
                 }, 100);
             });
+
+              // Add to form submission handler after QR generation
+            const adminDownloadBtn = document.getElementById('adminDownloadBtn');
+            adminDownloadBtn.disabled = false;
+            adminDownloadBtn.onclick = () => {
+                const qrImg = document.querySelector('#qrCodeContainer img');
+                if (qrImg) {
+                    const userId = document.getElementById('userId').value;
+                    const link = document.createElement('a');
+                    link.href = qrImg.src;
+                    link.download = `atlantic-fluids-profile-${userId}.png`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            };
 
             const profileData = {
                 userId: userId,
