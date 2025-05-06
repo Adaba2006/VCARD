@@ -15,6 +15,7 @@
             --error-red: #dc3545;
             --shadow: 0 4px 20px rgba(0, 86, 168, 0.08);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --border: #e2e8f0;
         }
 
         * {
@@ -39,7 +40,6 @@
             overflow: hidden;
         }
 
-        /* Header Section */
         .admin-header {
             background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
             padding: 1.5rem;
@@ -52,7 +52,6 @@
             margin-bottom: 0.4rem;
         }
 
-        /* Main Content Grid */
         .content-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -60,7 +59,6 @@
             padding: 1.5rem;
         }
 
-        /* Company Constants Section */
         .constants-section {
             background: var(--light-blue);
             padding: 1.5rem;
@@ -129,7 +127,6 @@
             background: var(--light-blue);
         }
 
-        /* Form Elements */
         .form-section {
             padding: 1.5rem;
         }
@@ -175,14 +172,6 @@
             margin-bottom: 1rem;
             border: 1px solid rgba(0, 86, 168, 0.1);
             line-height: 1.5;
-        }
-
-        .constant-label {
-            font-weight: 600;
-            color: var(--primary-blue);
-            margin-bottom: 0.4rem;
-            font-size: 0.85rem;
-            display: block;
         }
 
         .dynamic-field-group {
@@ -238,18 +227,11 @@
             transform: translateY(-2px);
         }
 
-        /* Social media section */
         .social-section {
             background: var(--light-blue);
             padding: 1rem;
             border-radius: 0.6rem;
             margin-top: 1rem;
-        }
-
-        .social-title {
-            font-size: 1rem;
-            margin-bottom: 1rem;
-            color: var(--text-dark);
         }
 
         .social-grid {
@@ -271,7 +253,27 @@
             text-align: center;
         }
 
-        /* Responsive Design */
+        .qr-section {
+            padding: 1.5rem;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+
+        .qr-code-container {
+            margin: 1rem auto;
+            padding: 1rem;
+            background: var(--white);
+            border-radius: 0.8rem;
+            display: inline-block;
+            box-shadow: var(--shadow);
+        }
+
+        .qr-code-container img {
+            max-width: 200px;
+            height: auto;
+            border-radius: 0.5rem;
+        }
+
         @media (max-width: 768px) {
             .content-grid {
                 grid-template-columns: 1fr;
@@ -297,6 +299,10 @@
 
             .social-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .qr-code-container img {
+                max-width: 150px;
             }
         }
 
@@ -332,7 +338,6 @@
 
         <div class="constants-section">
             <div class="content-grid">
-                <!-- Logo Selection -->
                 <div class="constant-card">
                     <h3>Company Logo Selection</h3>
                     <div class="logo-selector" id="logoSelector">
@@ -349,7 +354,6 @@
                     </div>
                 </div>
 
-                <!-- Website Selection -->
                 <div class="constant-card">
                     <h3>Website Selection</h3>
                     <div class="website-selector" id="websiteSelector">
@@ -363,7 +367,6 @@
                 </div>
             </div>
 
-            <!-- Company Address (Constant) -->
             <div class="constant-card">
                 <h3>Company Address</h3>
                 <div class="address-display">
@@ -435,6 +438,12 @@
                     </div>
                 </div>
 
+                <div class="qr-section">
+                    <h3>Generated QR Code</h3>
+                    <div class="qr-code-container" id="qrCodeContainer"></div>
+                    <p>Scan this code to access the profile</p>
+                </div>
+
                 <div class="form-group" style="margin-top: 1.5rem;">
                     <button type="submit" class="submit-btn">
                         <i class="fas fa-save"></i> Save Profile
@@ -443,7 +452,6 @@
             </form>
         </div>
     </div>
-    <div id="qr-temp" style="display:none;"></div>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
@@ -462,12 +470,10 @@
         const app = firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Company Constants State
-        let selectedLogo = 'logo1.jpg'; // Changed to match the data structure format
+        let selectedLogo = 'logo1.jpg';
         let selectedWebsite = 'https://atlanticfluids.com/';
         const companyAddress = "19, Jessy & Jenny Street, Off Peter Odili Road, Trans-Amadi, Port Harcourt, Rivers State, Nigeria.";
 
-        // Selection Functions
         function selectLogo(element, logoPath) {
             document.querySelectorAll('.logo-option').forEach(opt => opt.classList.remove('selected'));
             element.classList.add('selected');
@@ -480,7 +486,6 @@
             selectedWebsite = url;
         }
 
-        // Dynamic Fields Management
         function createField(type, containerId) {
             const container = document.getElementById(containerId);
             const fieldGroup = document.createElement('div');
@@ -516,11 +521,9 @@
             createField('tel', 'phoneContainer');
         }
 
-        // Form Submission
         document.getElementById('profileForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // Get social media values
             const social = {
                 facebook: document.getElementById('facebook').value || null,
                 twitter: document.getElementById('twitter').value || null,
@@ -528,78 +531,66 @@
                 instagram: document.getElementById('instagram').value || null
             };
 
-            // Filter out empty social values
             Object.keys(social).forEach(key => {
                 if (!social[key]) delete social[key];
             });
 
-            // Get the user ID (renamed from employeeId to match data structure)
             const userId = document.getElementById('userId').value;
+            const qrUrl = `https://adaba2006.github.io/VCARD/?id=${encodeURIComponent(userId)}`;
 
-            // Match the data structure format specified
+            const qrContainer = document.getElementById('qrCodeContainer');
+            qrContainer.innerHTML = '';
+            
+            new QRCode(qrContainer, {
+                text: qrUrl,
+                width: 200,
+                height: 200,
+                colorDark: "#0066CC",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            const qrBase64 = await new Promise((resolve) => {
+                setTimeout(() => {
+                    const qrImg = qrContainer.querySelector('img');
+                    resolve(qrImg ? qrImg.src : null);
+                }, 100);
+            });
+
             const profileData = {
                 userId: userId,
-                fullname: document.getElementById('fullName').value, // Changed to fullname to match data structure
+                fullname: document.getElementById('fullName').value,
                 emails: Array.from(document.querySelectorAll('.email-input')).map(i => i.value),
                 phones: Array.from(document.querySelectorAll('.phone-input')).map(i => i.value),
-                logo: selectedLogo, // Changed to logo to match data structure
+                logo: selectedLogo,
                 website: selectedWebsite,
                 address: companyAddress,
                 social: social,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                qrCode: null // Placeholder for QR code
-                
+                qrCode: qrBase64,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
             };
-            const qrContainer = document.getElementById('qr-temp');
-            qrContainer.innerHTML = ''; // clear any previous
-
-    // Step 2: Generate QR code
-    new QRCode(qrContainer, {
-        text: `https://adaba2006.github.io/VCARD/?id=${userId}`, // Replace with your actual URL
-        width: 128,
-        height: 128
-    });
-
-    // Step 3: Wait for QR code to render and extract as base64
-    const qrBase64 = await new Promise((resolve) => {
-        setTimeout(() => {
-            const qrImg = qrContainer.querySelector('img');
-            if (qrImg) {
-                resolve(qrImg.src);
-            } else {
-                resolve(null);
-            }
-        }, 100); // Add a delay of 100ms to ensure QR code rendering
-    });
-
-    // Step 4: Add it to profileData
-    profileData.qrCode = qrBase64;
 
             try {
                 await db.collection('profiles').doc(userId).set(profileData);
                 alert('Profile saved with QR Code!');
-                document.getElementById('profileForm').reset();
-            // Reset fields (same as before)
                 
-                // Reset social media fields
+                document.getElementById('profileForm').reset();
+                document.getElementById('emailContainer').innerHTML = '';
+                document.getElementById('phoneContainer').innerHTML = '';
+                addEmailField();
+                addPhoneField();
+                
                 document.getElementById('facebook').value = '';
                 document.getElementById('twitter').value = '';
                 document.getElementById('linkedin').value = '';
                 document.getElementById('instagram').value = '';
                 
-                // Reset dynamic fields
-                document.getElementById('emailContainer').innerHTML = '';
-                document.getElementById('phoneContainer').innerHTML = '';
-                addEmailField();
-                addPhoneField();
             } catch (error) {
                 alert(`Error saving profile: ${error.message}`);
             }
         });
 
-        // Initialize default selections and fields
         window.onload = function() {
-            // Add initial email and phone fields
             if (document.getElementById('emailContainer').children.length === 0) {
                 addEmailField();
             }
@@ -607,7 +598,6 @@
                 addPhoneField();
             }
         };
-
         // Check if editing existing profile
         const urlParams = new URLSearchParams(window.location.search);
         const editId = urlParams.get('edit');
