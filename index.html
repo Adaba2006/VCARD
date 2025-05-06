@@ -294,6 +294,32 @@
                 color: white;
             }
         }
+        .download-btn {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: 0.6rem;
+        cursor: pointer;
+        transition: var(--transition);
+        font-size: 0.95rem;
+        margin-top: 1rem;
+    }
+
+    .download-btn:hover {
+        background: var(--secondary);
+        transform: translateY(-2px);
+    }
+
+    .download-btn:disabled {
+        background: #cccccc;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .download-btn i {
+        margin-right: 0.5rem;
+    }
     </style>
 </head>
 <body>
@@ -367,7 +393,11 @@
                 <div class="qr-code-container" id="vcardQrCode">
                     <p>QR Code Loading...</p>
                 </div>
+                <button id="downloadQrBtn" class="download-btn" disabled>
+                    <i class="fas fa-download"></i> Download QR Code
+                </button>
             </div>
+            
         </main>
     </div>
 
@@ -424,6 +454,9 @@
             updateContacts(profile);
             updateSocialLinks(profile.social);
             updateQRCode(profile.qrCode);
+            const downloadBtn = document.getElementById('downloadQrBtn');
+            downloadBtn.disabled = false;
+            downloadBtn.onclick = () => downloadQrCode(profileId, profile.qrCode);
         }
 
         function updateQRCode(qrCode) {
@@ -434,6 +467,43 @@
                 qrContainer.innerHTML = '<p>QR Code not available</p>';
             }
         }
+        // New download function
+        function downloadQrCode(userId, base64Data) {
+            if (!base64Data) {
+                alert('QR code not available for download');
+                return;
+        }
+
+        // Convert base64 to blob
+        const byteCharacters = atob(base64Data.split(',')[1]);
+        const byteArrays = [];
+        
+        for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+            const slice = byteCharacters.slice(offset, offset + 512);
+            const byteNumbers = new Array(slice.length);
+            
+            for (let i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+            
+            const byteArray = new Uint8Array(byteNumbers);
+            byteArrays.push(byteArray);
+        }
+        
+        const blob = new Blob(byteArrays, {type: 'image/png'});
+        const url = window.URL.createObjectURL(blob);
+
+        // Create temporary link
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `atlantic-fluids-profile-${userId}.png`;
+        document.body.appendChild(a);
+        a.click();
+        
+        // Cleanup
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+    }
 
         function updateLogo(logoPath) {
             const logoImg = document.querySelector('#companyLogo img');
