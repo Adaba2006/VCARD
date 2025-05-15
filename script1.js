@@ -20,10 +20,10 @@ function selectLogo(element, logoPath) {
     selectedLogo = logoPath;
 }
 
-function selectWebsite(element, url) {
+function selectWebsite(element, websiteUrl) {
     document.querySelectorAll('.website-option').forEach(opt => opt.classList.remove('selected'));
     element.classList.add('selected');
-    selectedWebsite = url;
+    selectedWebsite = websiteUrl;
 }
 
 function createField(type, containerId) {
@@ -162,6 +162,7 @@ if (editId) {
     db.collection('contacts').doc(editId).get().then((doc) => {
         if (doc.exists) {
             const data = doc.data();
+            console.log("Fetched data for edit:", data); 
             
             // Fill basic fields
             document.getElementById('userId').value = data.userId || '';
@@ -169,9 +170,10 @@ if (editId) {
             document.getElementById('fullName').value = data.fullname || ''; // Changed to fullname to match data structure
             
             // Fill dynamic email fields
+            const emailList = Array.isArray(data.emails) ? data.emails : [];
             document.getElementById('emailContainer').innerHTML = '';
-            if (data.emails && data.emails.length > 0) {
-                data.emails.forEach(email => {
+            if (emailList.length > 0) {
+                emailList.forEach(email => {
                     const fieldGroup = document.createElement('div');
                     fieldGroup.className = 'dynamic-field-group';
                     
@@ -180,24 +182,25 @@ if (editId) {
                     input.className = 'email-input';
                     input.value = email;
                     input.required = true;
-                    
+
                     const removeBtn = document.createElement('button');
                     removeBtn.type = 'button';
                     removeBtn.className = 'remove-field-btn';
                     removeBtn.innerHTML = '×';
                     removeBtn.onclick = () => removeField(removeBtn);
-                    
+
                     fieldGroup.append(input, removeBtn);
                     document.getElementById('emailContainer').appendChild(fieldGroup);
                 });
             } else {
                 addEmailField();
             }
-            
-            // Fill dynamic phone fields
+
+            // Handle phones safely
+            const phoneList = Array.isArray(data.phones) ? data.phones : [];
             document.getElementById('phoneContainer').innerHTML = '';
-            if (data.phones && data.phones.length > 0) {
-                data.phones.forEach(phone => {
+            if (phoneList.length > 0) {
+                phoneList.forEach(phone => {
                     const fieldGroup = document.createElement('div');
                     fieldGroup.className = 'dynamic-field-group';
                     
@@ -206,13 +209,13 @@ if (editId) {
                     input.className = 'phone-input';
                     input.value = phone;
                     input.required = true;
-                    
+
                     const removeBtn = document.createElement('button');
                     removeBtn.type = 'button';
                     removeBtn.className = 'remove-field-btn';
                     removeBtn.innerHTML = '×';
                     removeBtn.onclick = () => removeField(removeBtn);
-                    
+
                     fieldGroup.append(input, removeBtn);
                     document.getElementById('phoneContainer').appendChild(fieldGroup);
                 });
