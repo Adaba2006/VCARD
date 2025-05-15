@@ -76,7 +76,7 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
     });
 
     const userId = document.getElementById('userId').value;
-    const qrUrl = `https://adaba2006.github.io/VCARD/?id=${encodeURIComponent(userId)}`;
+    const qrUrl = `https://atlantic-fluids.github.io/v-card/?id=${encodeURIComponent(userId)}`;
 
     const qrContainer = document.getElementById('qrCodeContainer');
     qrContainer.innerHTML = '';
