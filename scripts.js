@@ -43,7 +43,7 @@ class ProfileManager {
         }
 
         try {
-            const doc = await db.collection("profiles").doc(this.profileId).get();
+            const doc = await db.collection("contacts").doc(this.profileId).get();
             if (!doc.exists) {
                 this.showError("Profile not found");
                 return;
