@@ -33,7 +33,7 @@ function createField(type, containerId) {
     
     const input = document.createElement('input');
     input.type = type;
-    input.className = `${type}-input`;
+    input.className = type === 'tel' ? 'phone-input' : 'email-input';
     input.required = container.children.length === 0;
     
     const removeBtn = document.createElement('button');
