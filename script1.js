@@ -127,7 +127,7 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
     };
 
     try {
-        await db.collection('profiles').doc(userId).set(profileData);
+        await db.collection('contacts').doc(userId).set(profileData);
         alert('Profile saved with QR Code!');
         
         document.getElementById('profileForm').reset();
@@ -159,7 +159,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const editId = urlParams.get('edit');
 
 if (editId) {
-    db.collection('profiles').doc(editId).get().then((doc) => {
+    db.collection('contacts').doc(editId).get().then((doc) => {
         if (doc.exists) {
             const data = doc.data();
             
